@@ -65,3 +65,11 @@ export const projects = [
     live: "",
   },
 ];
+
+
+export const contact = {
+  email: "chandranarayanpanda2005@gmail.com",
+  github: "https://github.com/ChandraNarayanPanda",
+  location: "Bhubaneswar, Odisha, India",
+};
+
