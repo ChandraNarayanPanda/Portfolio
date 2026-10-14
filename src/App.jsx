@@ -7,6 +7,7 @@ import Hero from "./components/Hero";
 import Intro from "./components/Intro";
 import Marquee from "./components/Marquee";
 import Services from "./components/Services";
+import Projects from "./components/Projects";
 
 export default function App() {
   const [loading, setLoading] = useState(
@@ -30,6 +31,7 @@ export default function App() {
         <Intro />
         <Marquee />
         <Services />
+        <Projects />
       </main>
     </>
   );
