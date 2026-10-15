@@ -58,7 +58,7 @@ export default function Navbar({ ready }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-black/95 md:hidden"
+                  className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-black/95 px-[3vw] py-4 backdrop-blur-md md:absolute md:border-0 md:bg-transparent md:py-5 md:backdrop-blur-none"
           >
             {links.map((l) => (
               <a
