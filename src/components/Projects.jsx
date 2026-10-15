@@ -1,24 +1,102 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useMotionTemplate,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { projects, githubProfile } from "../data/content";
 
 const ease = [0.22, 1, 0.36, 1];
 
+function Tilt({ children, badge }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const gx = useMotionValue(50);
+  const gy = useMotionValue(50);
+  const srx = useSpring(rx, { stiffness: 150, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 150, damping: 18 });
+  const glare = useMotionTemplate`radial-gradient(380px circle at ${gx}% ${gy}%, rgba(255,255,255,0.20), transparent 55%)`;
+
+  const onMove = (e) => {
+    if (reduce || e.pointerType === "touch") return;
+    const r = ref.current.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    ry.set((px - 0.5) * 18);
+    rx.set((0.5 - py) * 18);
+    gx.set(px * 100);
+    gy.set(py * 100);
+  };
+
+  const onLeave = () => {
+    rx.set(0);
+    ry.set(0);
+    gx.set(50);
+    gy.set(50);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      className="relative"
+      style={{ perspective: 1000 }}
+    >
+      {/* soft lime glow behind the image */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -inset-4 rounded-3xl bg-lime/20 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+      />
+
+      <motion.div
+        style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
+        className="relative"
+      >
+        <div className="relative overflow-hidden rounded-lg border border-white/10 bg-[#0b0b0b] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)]">
+          {children}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{ background: glare }}
+          />
+        </div>
+
+        {badge && (
+          <span
+            className="absolute bottom-3 left-3 rounded-full bg-black/70 px-2.5 py-1 text-[10px] text-white/80 backdrop-blur"
+            style={{ transform: "translateZ(50px)" }}
+          >
+            {badge}
+          </span>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
 function Thumb({ project }) {
   if (!project.image) {
     return (
-      <div
-        aria-hidden
-        className="grid aspect-video place-items-center rounded-lg border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02]"
-      >
-        <span className="silver-text font-display text-[30vw] font-black leading-none md:text-[10vw]">
-          {project.title[0]}
-        </span>
-      </div>
+      <Tilt>
+        <div
+          aria-hidden
+          className="grid aspect-video place-items-center bg-gradient-to-br from-white/10 to-white/[0.02]"
+        >
+          <span className="silver-text font-display text-[30vw] font-black leading-none md:text-[10vw]">
+            {project.title[0]}
+          </span>
+        </div>
+      </Tilt>
     );
   }
   return (
-    <div className="relative overflow-hidden rounded-lg border border-white/10">
+    <Tilt badge="Preview artwork">
       <img
         src={project.image}
         alt={project.alt}
@@ -27,10 +105,7 @@ function Thumb({ project }) {
         loading="lazy"
         className="aspect-video w-full object-cover transition duration-700 group-hover:scale-105"
       />
-      <span className="absolute bottom-2 left-2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white/70 backdrop-blur">
-        Preview artwork
-      </span>
-    </div>
+    </Tilt>
   );
 }
 

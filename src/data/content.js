@@ -16,7 +16,6 @@ export const services = [
   { title: "Git & Deployment", stack: "Git, GitHub, Vercel" },
 ];
 
-
 export const githubProfile = "https://github.com/ChandraNarayanPanda";
 
 export const projects = [
@@ -66,10 +65,9 @@ export const projects = [
   },
 ];
 
-
 export const contact = {
   email: "chandranarayanpanda2005@gmail.com",
   github: "https://github.com/ChandraNarayanPanda",
+  linkedin: "https://www.linkedin.com/in/chandranarayanpanda/",
   location: "Bhubaneswar, Odisha, India",
 };
-
