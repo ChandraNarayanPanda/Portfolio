@@ -1,6 +1,6 @@
 export const introText =
-  "Hey, I'm **Chandra.** A final-year B.Tech CSE student at Gandhi Engineering College, Bhubaneswar. I enjoy building responsive web apps with **React,** **JavaScript,** **Tailwind CSS** and **Framer Motion,** and back-end APIs with **Flask** and **FastAPI.** I also work with machine learning in Python. I'm looking for an entry-level **Web Developer** role where I can learn from a team and build real features.";
-
+  "Hey, I'm **Chandra.** A final-year B.Tech CSE student at Gandhi Engineering College, Bhubaneswar, and an **Aspiring Web Developer** and **AI/ML Enthusiast.** I build responsive web apps with **React,** **JavaScript,** **Tailwind CSS** and **Framer Motion,** and back-end APIs with **Flask** and **FastAPI.** I also build machine learning models in Python with **Scikit-learn,** **Pandas** and **NumPy.** I'm looking for an entry-level **Web Developer** or **AI/ML** role where I can learn from a team and build real features.";
+  
 export const skillRows = [
   ["HTML5", "CSS3", "JavaScript", "React.js", "Tailwind CSS", "Framer Motion", "Recharts"],
   ["Python", "SQL", "Node.js", "Express.js", "Flask", "FastAPI", "REST APIs"],

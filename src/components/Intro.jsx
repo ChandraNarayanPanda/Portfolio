@@ -24,8 +24,8 @@ const words = introText
 const facts = [
   { label: "Education", value: "B.Tech CSE, final year" },
   { label: "College", value: "Gandhi Engineering College" },
-  { label: "Build with", value: "React, Tailwind CSS, Flask, FastAPI" },
-  { label: "Looking for", value: "Entry-level Web Developer role" },
+  { label: "Build with", value: "React, Flask, FastAPI, Scikit-learn" },
+  { label: "Looking for", value: "Entry-level Web Developer or AI/ML role" },
 ];
 
 function Word({ children, bold, progress, range }) {
@@ -170,7 +170,7 @@ export default function Intro() {
           </svg>
 
           <p className="mt-4 font-serif text-xl italic text-white/60 md:text-2xl">
-            Web developer, final-year B.Tech CSE student
+           Aspiring Web Developer | AI/ML Enthusiast
           </p>
 
           <motion.div

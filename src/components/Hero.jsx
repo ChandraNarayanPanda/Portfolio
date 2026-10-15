@@ -19,7 +19,9 @@ export default function Hero({ ready }) {
           transition={{ duration: 1, ease, delay: 0.1 }}
           className="silver-text relative z-10 select-none text-center font-display text-[15.5vw] font-black leading-none tracking-tight"
         >
-          <span className="sr-only">Chandra Narayan Panda, </span>
+          <span className="sr-only">
+            Chandra Narayan Panda, Aspiring Web Developer and AI/ML Enthusiast,{" "}
+          </span>
           PORTFOLIO
         </motion.h1>
 
@@ -29,9 +31,12 @@ export default function Hero({ ready }) {
           transition={{ duration: 0.9, ease, delay: 0.9 }}
           className="relative z-30 mt-3 flex flex-col items-center gap-4 px-[3vw] md:flex-row md:items-start md:justify-between"
         >
-          <p className="text-xl md:text-2xl">
-            <span className="font-semibold">Web</span>{" "}
+          <p className="text-center text-lg leading-snug md:max-w-[27vw] md:text-left md:text-2xl">
+            <span className="font-semibold">Aspiring Web</span>{" "}
             <span className="font-serif italic text-white/80">Developer</span>
+            <span className="mt-1 block font-serif text-base italic text-lime md:text-xl">
+              AI/ML Enthusiast
+            </span>
           </p>
 
           <div className="flex items-center gap-3">

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -48,7 +48,6 @@ function Tilt({ children, badge }) {
       className="relative"
       style={{ perspective: 1000 }}
     >
-      {/* soft lime glow behind the image */}
       <div
         aria-hidden
         className="pointer-events-none absolute -inset-4 rounded-3xl bg-lime/20 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
@@ -96,7 +95,7 @@ function Thumb({ project }) {
     );
   }
   return (
-    <Tilt badge="Preview artwork">
+    <Tilt badge={project.realShot ? null : "Preview artwork"}>
       <img
         src={project.image}
         alt={project.alt}
@@ -182,7 +181,18 @@ function Card({ project, index }) {
   );
 }
 
+const filters = [
+  { id: "all", label: "All" },
+  { id: "web", label: "Web" },
+  { id: "ai", label: "AI / ML" },
+];
+
 export default function Projects() {
+  const [filter, setFilter] = useState("all");
+  const visible = projects.filter(
+    (p) => filter === "all" || p.category === filter
+  );
+
   return (
     <section id="projects" className="mt-28 md:mt-44">
       <div aria-hidden className="h-2 w-full bg-lime" />
@@ -197,8 +207,8 @@ export default function Projects() {
           </h2>
           <div className="max-w-sm">
             <p className="text-sm leading-relaxed text-white/60">
-              Projects from my coursework, training and self-study. Links appear
-              here as soon as each project is published.
+              Web and AI/ML projects from my coursework, training and
+              self-study, with source code and live demos where available.
             </p>
             <a
               href={githubProfile}
@@ -211,8 +221,31 @@ export default function Projects() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-20 md:mt-24 md:gap-32">
-          {projects.map((p, i) => (
+        <div
+          className="mt-12 flex flex-wrap gap-3"
+          role="tablist"
+          aria-label="Filter projects"
+        >
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              role="tab"
+              aria-selected={filter === f.id}
+              onClick={() => setFilter(f.id)}
+              className={`rounded-full border px-5 py-2 text-sm transition ${
+                filter === f.id
+                  ? "border-lime bg-lime text-black"
+                  : "border-white/20 text-white/70 hover:border-white/50 hover:text-white"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-col gap-20 md:mt-16 md:gap-32">
+          {visible.map((p, i) => (
             <Card key={p.title} project={p} index={i} />
           ))}
         </div>
