@@ -32,6 +32,11 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+
+    padding-top: 0.12em;
+  padding-bottom: 0.12em;
+  margin-top: -0.12em;
+  margin-bottom: -0.12em;
 }
 
 .spotlight {
