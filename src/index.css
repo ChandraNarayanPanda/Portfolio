@@ -5,6 +5,7 @@
   --font-display: "Archivo", "Arial Black", sans-serif;
   --font-serif: "Instrument Serif", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
+    --font-hand: "Caveat", "Segoe Script", cursive;
 }
 
 html {

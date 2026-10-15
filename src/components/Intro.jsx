@@ -1,10 +1,8 @@
 import { useRef, useState } from "react";
 import {
   motion,
-  useMotionValue,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
 } from "framer-motion";
 import { introText } from "../data/content";
@@ -42,8 +40,7 @@ function Word({ children, bold, progress, range }) {
   );
 }
 
-const paraClass =
-  "text-base leading-relaxed text-white/85 md:columns-2 md:gap-14 md:text-lg";
+const paraClass = "text-base leading-relaxed text-white/80 md:text-lg";
 
 function RevealText() {
   const ref = useRef(null);
@@ -82,111 +79,9 @@ function PlainText() {
   );
 }
 
-/* ---------- stacked 3D name (scales to its column on every screen) ---------- */
-const LAYERS = 14;
-const DEPTH = 1.1;
-const LINES = [
-  { id: "n1", text: "CHANDRA", y: 170, len: 900 },
-  { id: "n2", text: "NARAYAN", y: 360, len: 900 },
-  { id: "n3", text: "PANDA", y: 550, len: 650 },
-];
-
-function Name3D({ reduce }) {
-  const depth = Array.from({ length: LAYERS }, (_, k) => LAYERS - k);
-  return (
-    <svg
-      viewBox="0 0 1000 600"
-      className="block h-auto w-full"
-      role="img"
-      aria-label="Chandra Narayan Panda"
-    >
-      <defs>
-        {LINES.map((l) => (
-          <text
-            key={l.id}
-            id={l.id}
-            x="20"
-            y={l.y}
-            fontSize="180"
-            fontWeight="900"
-            textLength={l.len}
-            lengthAdjust="spacingAndGlyphs"
-            style={{ fontFamily: "'Archivo', 'Arial Black', sans-serif" }}
-          >
-            {l.text}
-          </text>
-        ))}
-
-        <linearGradient
-          id="shine"
-          gradientUnits="userSpaceOnUse"
-          x1="0"
-          y1="0"
-          x2="200"
-          y2="80"
-        >
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0" />
-          <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
-          {!reduce && (
-            <animateTransform
-              attributeName="gradientTransform"
-              type="translate"
-              from="-300 0"
-              to="1200 0"
-              dur="5s"
-              repeatCount="indefinite"
-            />
-          )}
-        </linearGradient>
-      </defs>
-
-      {LINES.map((l) => (
-        <g key={l.id}>
-          {depth.map((i) => (
-            <use
-              key={i}
-              href={`#${l.id}`}
-              x={i * DEPTH}
-              y={i * DEPTH}
-              fill={`hsl(220 8% ${8 + (1 - i / LAYERS) * 24}%)`}
-            />
-          ))}
-          {/* lime front face */}
-          <use href={`#${l.id}`} fill="#d4ff3a" />
-          {/* light sweep */}
-          <use href={`#${l.id}`} fill="url(#shine)" />
-        </g>
-      ))}
-
-      {/* dot after PANDA */}
-      <circle cx="740" cy="535" r="20" fill="#d4ff3a" />
-    </svg>
-  );
-}
-
-
 export default function Intro() {
   const reduce = useReducedMotion();
   const [imgFailed, setImgFailed] = useState(false);
-
-  /* gentle 3D tilt of the name with the mouse (computer only) */
-  const nameRef = useRef(null);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 120, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 120, damping: 18 });
-
-  const onMove = (e) => {
-    if (reduce || e.pointerType === "touch") return;
-    const r = nameRef.current.getBoundingClientRect();
-    ry.set(((e.clientX - r.left) / r.width - 0.5) * 14);
-    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 10);
-  };
-  const onLeave = () => {
-    rx.set(0);
-    ry.set(0);
-  };
 
   return (
     <section
@@ -200,79 +95,100 @@ export default function Intro() {
         </span>
       </h2>
 
-      <div className="mt-10 grid items-center gap-12 md:mt-16 md:grid-cols-2 md:gap-14">
-        {/* Name (right on computer, top on phone) */}
-        <motion.div
-          ref={nameRef}
-          onPointerMove={onMove}
-          onPointerLeave={onLeave}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.9, ease }}
-          className="relative min-w-0"
-          style={{ perspective: 900 }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-lime/10 blur-3xl"
-          />
-          <motion.div style={{ rotateX: srx, rotateY: sry }}>
-            <Name3D reduce={reduce} />
-          </motion.div>
-          <p className="mt-4 font-serif text-xl italic text-white/70 md:text-2xl">
-            Web developer, final-year B.Tech CSE student
-          </p>
-        </motion.div>
-
-        {/* Photo (left on computer, below the name on phone) */}
+      <div className="mt-10 grid items-center gap-10 md:mt-16 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-16">
+        {/* Photo: one photo, on the left */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.9, ease }}
-          className="relative mx-auto w-full max-w-[360px] md:order-first md:ml-0 md:mr-auto"
+          className="mx-auto w-full max-w-[340px] md:mx-0 md:max-w-none"
         >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-lime/10 blur-3xl"
-          />
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]">
             {imgFailed ? (
-              <div className="grid aspect-[864/1233] w-full place-items-center p-6 text-center text-sm text-white/60">
+              <div className="grid aspect-[1200/1607] w-full place-items-center p-6 text-center text-sm text-white/60">
                 Photo not found. Check the file name in public/images.
               </div>
             ) : (
               <img
                 src="/images/intro-casual.webp"
-                alt="Chandra Narayan Panda standing in a white linen shirt"
+                alt="Portrait of Chandra Narayan Panda"
                 width="1200"
                 height="1607"
+                loading="lazy"
                 onError={() => setImgFailed(true)}
                 className="block h-auto w-full"
               />
             )}
-            <span aria-hidden className="absolute left-0 top-0 h-16 w-[2px] bg-lime" />
-            <span aria-hidden className="absolute left-0 top-0 h-[2px] w-16 bg-lime" />
           </div>
-        
         </motion.div>
+
+        {/* Name + intro text, on the right */}
+        <div className="min-w-0">
+          <p className="text-sm uppercase tracking-[0.25em] text-white/45">
+            Hello, I'm
+          </p>
+
+                    <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.5 }}
+          >
+            <motion.h3
+              variants={{
+                hidden: reduce
+                  ? { clipPath: "inset(0 0% 0 0)" }
+                  : { clipPath: "inset(0 100% 0 0)" },
+                show: {
+                  clipPath: "inset(0 0% 0 0)",
+                  transition: { duration: 1.6, ease: "easeInOut" },
+                },
+              }}
+              className="mt-2 text-balance py-3 font-hand text-[15vw] font-semibold leading-[1.05] text-[#ece8df] md:text-[5.6vw]"
+            >
+              Chandra Narayan Panda
+            </motion.h3>
+          </motion.div>
+
+          <svg
+            aria-hidden
+            viewBox="0 0 300 12"
+            preserveAspectRatio="none"
+            className="mt-1 h-3 w-48 md:w-72"
+          >
+            <motion.path
+              d="M2 8 C 60 2, 120 11, 180 5 S 270 6, 298 4"
+              fill="none"
+              stroke="rgba(236,232,223,0.4)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              initial={reduce ? false : { pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 1, ease: "easeInOut", delay: 1.4 }}
+            />
+          </svg>
+
+          <p className="mt-4 font-serif text-xl italic text-white/60 md:text-2xl">
+            Web developer, final-year B.Tech CSE student
+          </p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.9, ease }}
+            className="mt-8 border-t border-white/10 pt-6"
+          >
+            {reduce ? <PlainText /> : <RevealText />}
+          </motion.div>
+        </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.9, ease }}
-        className="mx-auto mt-16 max-w-5xl border-t border-white/15 pt-8 md:mt-24"
-      >
-        {reduce ? <PlainText /> : <RevealText />}
-      </motion.div>
-
-      <ul className="mx-auto mt-12 grid max-w-5xl gap-6 border-t border-white/10 pt-8 sm:grid-cols-2 md:grid-cols-4">
+      <ul className="mt-14 grid gap-6 border-t border-white/10 pt-8 sm:grid-cols-2 md:grid-cols-4">
         {facts.map((f) => (
           <li key={f.label}>
-            <span className="block text-xs uppercase tracking-wider text-lime">
+            <span className="block text-xs uppercase tracking-wider text-white/45">
               {f.label}
             </span>
             <span className="mt-2 block text-sm text-white/80">{f.value}</span>
