@@ -3,7 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import Preloader from "./components/Preloader";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
-import Hero from "./components/hero";
+import Hero from "./components/Hero";
 import Intro from "./components/Intro";
 import Marquee from "./components/Marquee";
 import Services from "./components/Services";
