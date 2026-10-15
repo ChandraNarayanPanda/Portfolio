@@ -24,7 +24,11 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="mt-28 px-[3vw] md:mt-44">
+    <section id="contact" className="relative isolate mt-28 px-[3vw] md:mt-44">
+  <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <div className="glow-blob glow-a" />
+    <div className="glow-blob glow-b" />
+  </div>
       <motion.h2
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

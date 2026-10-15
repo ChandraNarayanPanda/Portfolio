@@ -77,3 +77,46 @@ body {
     animation: none;
   }
 }
+
+
+
+.glow-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.25;
+}
+
+.glow-a {
+  width: 40vw;
+  height: 40vw;
+  min-width: 260px;
+  min-height: 260px;
+  background: #d4ff3a;
+  top: -10%;
+  left: -10%;
+  animation: float-a 14s ease-in-out infinite alternate;
+}
+
+.glow-b {
+  width: 35vw;
+  height: 35vw;
+  min-width: 240px;
+  min-height: 240px;
+  background: #7c5cff;
+  bottom: -10%;
+  right: -5%;
+  animation: float-b 18s ease-in-out infinite alternate;
+}
+
+@keyframes float-a {
+  to { transform: translate(30vw, 15vh) scale(1.2); }
+}
+
+@keyframes float-b {
+  to { transform: translate(-25vw, -10vh) scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-blob { animation: none; }
+}
