@@ -121,3 +121,37 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .glow-blob { animation: none; }
 }
+
+
+
+
+.scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #c6ff00;
+  box-shadow: 0 0 18px 4px rgba(198, 255, 0, 0.7);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scan-up {
+  animation: scanUp 0.7s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.scan-down {
+  animation: scanDown 0.7s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes scanUp {
+  0% { top: 100%; opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 0; opacity: 0; }
+}
+
+@keyframes scanDown {
+  0% { top: 0; opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
