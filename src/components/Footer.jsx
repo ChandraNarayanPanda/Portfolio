@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUp, ArrowUpRight, Download, Mail } from "lucide-react";
-import { contact } from "../data/content";
+import { contact, navLinks } from "../data/content";
 
 const ease = [0.22, 1, 0.36, 1];
-
-const nav = [
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
-];
 
 const iconBtn =
   "grid h-12 w-12 place-items-center rounded-full border border-white/20 text-white/80 transition hover:border-lime hover:bg-lime hover:text-black";
@@ -50,6 +43,7 @@ function useIndiaTime() {
 
 export default function Footer() {
   const time = useIndiaTime();
+  const links = navLinks.filter((l) => l.href !== "#home");
 
   return (
     <footer className="relative isolate mt-28 overflow-hidden border-t border-white/10 px-[3vw] pt-16 md:mt-44 md:pt-24">
@@ -83,7 +77,7 @@ export default function Footer() {
           </a>
           <a
             href="/resume.pdf"
-            download
+            download="Chandra-Narayan-Panda-Resume.pdf"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-6 py-3 text-sm text-white/90 transition hover:bg-white hover:text-black"
           >
             Resume <Download size={14} />
@@ -95,8 +89,8 @@ export default function Footer() {
       <div className="mt-14 grid gap-10 border-t border-white/10 pt-10 sm:grid-cols-2 md:mt-20 md:grid-cols-3">
         <div>
           <p className="text-xs uppercase tracking-wider text-white/40">Navigate</p>
-          <ul className="mt-4 space-y-2">
-            {nav.map((n) => (
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
+            {links.map((n) => (
               <li key={n.href}>
                 <a
                   href={n.href}
@@ -154,7 +148,9 @@ export default function Footer() {
               Local time {time} IST
             </p>
           )}
-          <p className="mt-2 text-sm text-white/60">Open to entry-level roles</p>
+          <p className="mt-2 text-sm text-white/60">
+            Open to Web Developer and AI/ML roles
+          </p>
         </div>
       </div>
 
@@ -163,7 +159,7 @@ export default function Footer() {
         viewBox="0 0 1000 125"
         className="mt-14 block h-auto w-full md:mt-20"
         role="img"
-        aria-label="Chandra Panda"
+        aria-label="Chandra Narayan Panda"
       >
         <defs>
           <linearGradient id="foot-face" x1="0" y1="0" x2="0" y2="1">
@@ -193,7 +189,7 @@ export default function Footer() {
           Tailwind CSS and Framer Motion.
         </p>
         <a
-          href="#"
+          href="#home"
           className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:border-lime hover:bg-lime hover:text-black"
         >
           Back to top <ArrowUp size={14} />

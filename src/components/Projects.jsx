@@ -138,16 +138,18 @@ function Card({ project, index }) {
           {project.description}
         </p>
 
-        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies used">
-          {project.tech.map((t) => (
-            <li
-              key={t}
-              className="rounded-full border border-white/15 px-3 py-1 text-[11px] text-white/70"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
+        {project.tech.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies used">
+            {project.tech.map((t) => (
+              <li
+                key={t}
+                className="rounded-full border border-white/15 px-3 py-1 text-[11px] text-white/70"
+              >
+                {t}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
           {project.live && (
@@ -181,17 +183,24 @@ function Card({ project, index }) {
   );
 }
 
-const filters = [
-  { id: "all", label: "All" },
-  { id: "web", label: "Web" },
-  { id: "ai", label: "AI / ML" },
-];
+const labels = { web: "Web", ai: "AI / ML" };
 
 export default function Projects() {
   const [filter, setFilter] = useState("all");
-  const visible = projects.filter(
-    (p) => filter === "all" || p.category === filter
-  );
+
+  // only projects that are not switched off
+  const shown = projects.filter((p) => p.published !== false);
+
+  // filter tabs appear only when there is more than one type of project
+  const cats = [...new Set(shown.map((p) => p.category).filter(Boolean))];
+  const showFilters = cats.length > 1;
+  const filters = [
+    { id: "all", label: "All" },
+    ...cats.map((c) => ({ id: c, label: labels[c] || c })),
+  ];
+  const visible = showFilters
+    ? shown.filter((p) => filter === "all" || p.category === filter)
+    : shown;
 
   return (
     <section id="projects" className="mt-28 md:mt-44">
@@ -207,8 +216,8 @@ export default function Projects() {
           </h2>
           <div className="max-w-sm">
             <p className="text-sm leading-relaxed text-white/60">
-              Web and AI/ML projects from my coursework, training and
-              self-study, with source code and live demos where available.
+              Projects I have built and published, with source code and live
+              demos.
             </p>
             <a
               href={githubProfile}
@@ -221,33 +230,57 @@ export default function Projects() {
           </div>
         </div>
 
-        <div
-          className="mt-12 flex flex-wrap gap-3"
-          role="tablist"
-          aria-label="Filter projects"
-        >
-          {filters.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              role="tab"
-              aria-selected={filter === f.id}
-              onClick={() => setFilter(f.id)}
-              className={`rounded-full border px-5 py-2 text-sm transition ${
-                filter === f.id
-                  ? "border-lime bg-lime text-black"
-                  : "border-white/20 text-white/70 hover:border-white/50 hover:text-white"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+        {showFilters && (
+          <div
+            className="mt-12 flex flex-wrap gap-3"
+            role="tablist"
+            aria-label="Filter projects"
+          >
+            {filters.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                role="tab"
+                aria-selected={filter === f.id}
+                onClick={() => setFilter(f.id)}
+                className={`rounded-full border px-5 py-2 text-sm transition ${
+                  filter === f.id
+                    ? "border-lime bg-lime text-black"
+                    : "border-white/20 text-white/70 hover:border-white/50 hover:text-white"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-        <div className="mt-12 flex flex-col gap-20 md:mt-16 md:gap-32">
+        <div
+          className={`flex flex-col gap-20 md:gap-32 ${
+            showFilters ? "mt-12 md:mt-16" : "mt-16 md:mt-24"
+          }`}
+        >
           {visible.map((p, i) => (
             <Card key={p.title} project={p} index={i} />
           ))}
+        </div>
+
+        <div className="mt-20 rounded-2xl border border-dashed border-white/20 p-8 text-center md:mt-28 md:p-12">
+          <p className="font-serif text-2xl italic text-white/80 md:text-3xl">
+            More projects are on the way
+          </p>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/55">
+            I add each project here once it is finished and published. Follow
+            my GitHub to see new work first.
+          </p>
+          <a
+            href={githubProfile}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-white/25 px-5 py-2.5 text-sm text-white/90 transition hover:bg-lime hover:text-black"
+          >
+            Follow on GitHub <ArrowUpRight size={14} />
+          </a>
         </div>
       </div>
     </section>

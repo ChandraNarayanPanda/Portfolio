@@ -1,3 +1,6 @@
+import Experience from "./components/Experience";
+import Certificates from "./components/Certificates";
+
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Preloader from "./components/Preloader";
@@ -34,6 +37,8 @@ export default function App() {
         <Marquee />
         <Services />
         <Projects />
+        <Experience />
+        <Certificates />
         <Contact />
       </main>
       <Footer />

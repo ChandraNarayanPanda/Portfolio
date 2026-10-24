@@ -13,11 +13,42 @@ const ease = [0.22, 1, 0.36, 1];
 const HERO_SRC = "/images/hero-suit.webp";
 const ROBOT_SRC = "/images/robot-hero.webp";
 
-/* Line-up for the robot image (found by hand-tuning).
-   X / Y are % of the box. Negative X = left, negative Y = up. */
-const ROBOT_X = -0.25;
-const ROBOT_Y = -0.25;
-const ROBOT_SCALE = 1.005;
+function Actions({ arrow, mobile }) {
+  return (
+    <div className="flex items-center gap-3">
+      {arrow && (
+        <a
+          href="#projects"
+          aria-label="View my projects"
+          className="grid size-11 place-items-center rounded-full border border-white/25 transition hover:bg-lime hover:text-black"
+        >
+          <ArrowDownLeft size={16} />
+        </a>
+      )}
+      <a
+        href="#contact"
+        className={`rounded-full border px-5 py-2.5 text-sm italic transition hover:bg-lime hover:text-black ${
+          mobile
+            ? "border-white/30 bg-black/50 text-white backdrop-blur"
+            : "border-white/20 text-white/80"
+        }`}
+      >
+        Contact
+      </a>
+      <a
+        href="/resume.pdf"
+        download
+        className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm transition hover:bg-white hover:text-black ${
+          mobile
+            ? "bg-lime font-medium text-black"
+            : "border border-white/20 text-white/80 hover:bg-lime"
+        }`}
+      >
+        <Download size={14} /> Resume
+      </a>
+    </div>
+  );
+}
 
 export default function Hero({ ready }) {
   const reduce = useReducedMotion();
@@ -50,12 +81,7 @@ export default function Hero({ ready }) {
     rad.set(radiusFor(rect));
   };
 
-  /* Mouse: close the circle when the pointer leaves.
-     Touch: keep it open where the finger lifted. */
-  const leave = (e) => {
-    if (e.pointerType === "touch") return;
-    rad.set(0);
-  };
+  const leave = () => rad.set(0);
 
   /* Phones have no mouse, so the circle drifts over the face by itself
      until the visitor touches the photo. */
@@ -94,7 +120,7 @@ export default function Hero({ ready }) {
       <div aria-hidden className="spotlight absolute inset-0" />
 
       {/* Headline + info row (no z-index here, so children layer against the photo) */}
-      <div className="absolute inset-x-0 top-[17%] md:top-[30%]">
+      <div className="absolute inset-x-0 top-[15%] md:top-[30%]">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={ready ? { opacity: 1, y: 0 } : {}}
@@ -121,33 +147,15 @@ export default function Hero({ ready }) {
             </span>
           </p>
 
-          <div className="flex items-center gap-3">
-            <a
-              href="#projects"
-              aria-label="View my projects"
-              className="grid size-11 place-items-center rounded-full border border-white/25 transition hover:bg-lime hover:text-black"
-            >
-              <ArrowDownLeft size={16} />
-            </a>
-            <a
-              href="#contact"
-              className="rounded-full border border-white/20 px-5 py-2.5 text-sm italic text-white/80 transition hover:bg-lime hover:text-black"
-            >
-              Contact
-            </a>
-            <a
-              href="/resume.pdf"
-              download
-              className="flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm text-white/80 transition hover:bg-lime hover:text-black"
-            >
-              <Download size={14} /> Resume
-            </a>
+          {/* computer: buttons stay in this row */}
+          <div className="hidden md:block">
+            <Actions arrow />
           </div>
         </motion.div>
       </div>
 
       {/* Hero photo with the robot revealed by the cursor */}
-      <div className="absolute bottom-[6vh] left-1/2 z-20 w-[92vw] max-w-[640px] -translate-x-1/2 md:w-[42vw]">
+      <div className="absolute bottom-[13vh] left-1/2 z-20 w-[88vw] max-w-[640px] -translate-x-1/2 md:bottom-[6vh] md:w-[42vw]">
         <motion.div
           ref={boxRef}
           onPointerEnter={track}
@@ -157,7 +165,7 @@ export default function Hero({ ready }) {
           initial={{ y: "100%" }}
           animate={ready ? { y: 0 } : {}}
           transition={{ duration: 1.2, ease, delay: 0.3 }}
-          className="relative aspect-[1024/1053] w-full touch-pan-y"
+          className="relative"
         >
           <img
             src={HERO_SRC}
@@ -165,27 +173,17 @@ export default function Hero({ ready }) {
             width="1024"
             height="1053"
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-contain object-bottom"
+            className="block h-auto w-full"
           />
 
           {!reduce && (
-            /* The mask wrapper never moves, so the circle stays under the cursor.
-               Only the inner image is shifted/scaled to line up with the hero photo. */
-            <motion.div
+            <motion.img
               aria-hidden
-              className="pointer-events-none absolute inset-0 overflow-hidden"
+              src={ROBOT_SRC}
+              alt=""
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover object-bottom"
               style={{ WebkitMaskImage: mask, maskImage: mask }}
-            >
-              <img
-                src={ROBOT_SRC}
-                alt=""
-                className="absolute inset-0 h-full w-full object-contain object-bottom"
-                style={{
-                  transform: `translate(${ROBOT_X}%, ${ROBOT_Y}%) scale(${ROBOT_SCALE})`,
-                  transformOrigin: "50% 100%",
-                }}
-              />
-            </motion.div>
+            />
           )}
         </motion.div>
       </div>
@@ -195,6 +193,16 @@ export default function Hero({ ready }) {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[22vh] bg-gradient-to-t from-black via-black/80 to-transparent"
       />
+
+      {/* phone: Contact and Resume at the bottom, clear of the photo */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={ready ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.9, ease, delay: 1.2 }}
+        className="absolute inset-x-0 bottom-[4vh] z-30 flex justify-center px-[3vw] md:hidden"
+      >
+        <Actions mobile />
+      </motion.div>
     </section>
   );
 }
