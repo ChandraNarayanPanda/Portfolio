@@ -5,18 +5,14 @@
   --font-display: "Archivo", "Arial Black", sans-serif;
   --font-serif: "Instrument Serif", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
-    --font-hand: "Caveat", "Segoe Script", cursive;
+  --font-hand: "Caveat", "Segoe Script", cursive;
 }
 
 html {
-  scroll-behavior: smooth;
   background: #000;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
 }
 
 body {
@@ -34,7 +30,8 @@ body {
   background-clip: text;
   color: transparent;
 
-    padding-top: 0.12em;
+  /* extra room so the tops of big letters are not cut off */
+  padding-top: 0.12em;
   padding-bottom: 0.12em;
   margin-top: -0.12em;
   margin-bottom: -0.12em;
@@ -54,6 +51,7 @@ body {
   outline-offset: 3px;
 }
 
+/* ---------- skills marquee ---------- */
 .marquee-track {
   display: flex;
   width: max-content;
@@ -73,14 +71,7 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
-
-
+/* ---------- glowing background (Let's talk) ---------- */
 .glow-blob {
   position: absolute;
   border-radius: 9999px;
@@ -93,7 +84,7 @@ body {
   height: 40vw;
   min-width: 260px;
   min-height: 260px;
-  background: #d4ff3a;
+  background: var(--color-lime);
   top: -10%;
   left: -10%;
   animation: float-a 14s ease-in-out infinite alternate;
@@ -111,26 +102,24 @@ body {
 }
 
 @keyframes float-a {
-  to { transform: translate(30vw, 15vh) scale(1.2); }
+  to {
+    transform: translate(30vw, 15vh) scale(1.2);
+  }
 }
 
 @keyframes float-b {
-  to { transform: translate(-25vw, -10vh) scale(1.15); }
+  to {
+    transform: translate(-25vw, -10vh) scale(1.15);
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .glow-blob { animation: none; }
-}
-
-
-
-
+/* ---------- scan line ---------- */
 .scanline {
   position: absolute;
   left: 0;
   right: 0;
   height: 3px;
-  background: #c6ff00;
+  background: var(--color-lime);
   box-shadow: 0 0 18px 4px rgba(198, 255, 0, 0.7);
   pointer-events: none;
   opacity: 0;
@@ -145,23 +134,50 @@ body {
 }
 
 @keyframes scanUp {
-  0% { top: 100%; opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 0; opacity: 0; }
+  0% {
+    top: 100%;
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    opacity: 0;
+  }
 }
 
 @keyframes scanDown {
-  0% { top: 0; opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
-html {
-  scroll-padding-top: 4.5rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
+/* ---------- respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .glow-blob {
+    animation: none;
+  }
+
+  .scan-up,
+  .scan-down {
+    animation: none;
+    opacity: 0;
   }
 }
